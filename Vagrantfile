@@ -15,14 +15,8 @@ SECRET          = "your_secret_for_credential"
 Vagrant.configure("2") do |config|
   config.vm.box = "ailispaw/barge"
 
-  config.vm.synced_folder ".", "/vagrant", id: "vagrant"
-
   config.vm.provider :virtualbox do |vb|
     vb.memory = 2048
-  end
-
-  config.vm.provision :docker do |d|
-    d.pull_images "ailispaw/ubuntu-essential:14.04"
   end
 
   config.vm.define "mesos-master" do |master|
@@ -33,7 +27,7 @@ Vagrant.configure("2") do |config|
     master.vm.network :private_network, ip: "#{ip_addr}"
 
     master.vm.provision "zookeeper", type: "docker" do |d|
-      d.build_image "/vagrant/zookeeper", args: "-t ailispaw/zookeeper"
+      d.pull_images "ailispaw/zookeeper"
       d.run "zookeeper",
         image: "ailispaw/zookeeper",
         args: [
@@ -47,7 +41,7 @@ Vagrant.configure("2") do |config|
     end
 
     master.vm.provision "mesos-master", type: "docker" do |d|
-      d.build_image "/vagrant/mesos-master", args: "-t ailispaw/mesos-master"
+      d.pull_images "ailispaw/mesos-master"
       d.run "x-mesos-master",
         image: "ailispaw/mesos-master",
         args: [
@@ -65,7 +59,7 @@ Vagrant.configure("2") do |config|
     end
 
     master.vm.provision "marathon", type: "docker" do |d|
-      d.build_image "/vagrant/marathon", args: "-t ailispaw/marathon"
+      d.pull_images "ailispaw/marathon"
       d.run "marathon",
         image: "ailispaw/marathon",
         args: [
@@ -98,7 +92,7 @@ Vagrant.configure("2") do |config|
     end
 
     agent.vm.provision "mesos-agent", type: "docker" do |d|
-      d.build_image "/vagrant/mesos-agent", args: "-t ailispaw/mesos-agent"
+      d.pull_images "ailispaw/mesos-agent"
       d.run "x-mesos-agent",
         image: "ailispaw/mesos-agent",
         args: [
