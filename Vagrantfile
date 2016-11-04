@@ -116,7 +116,6 @@ Vagrant.configure("2") do |config|
         ].join(" "),
         cmd: [
           "/entrypoint.sh mesos-agent",
-          "--docker_mesos_image=ailispaw/mesos-agent",
           "--no-docker_kill_orphans"
         ].join(" ")
     end
