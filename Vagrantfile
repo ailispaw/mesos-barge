@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
 
     master.vm.provision "mesos-master", type: "docker" do |d|
       d.build_image "/vagrant/mesos-master", args: "-t ailispaw/mesos-master"
-      d.run "mesos-master",
+      d.run "x-mesos-master",
         image: "ailispaw/mesos-master",
         args: [
           "-e MESOS_HOSTNAME=#{ip_addr}",
@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
 
     agent.vm.provision "mesos-agent", type: "docker" do |d|
       d.build_image "/vagrant/mesos-agent", args: "-t ailispaw/mesos-agent"
-      d.run "mesos-agent",
+      d.run "x-mesos-agent",
         image: "ailispaw/mesos-agent",
         args: [
           "-e MESOS_HOSTNAME=#{ip_addr}",
@@ -114,10 +114,7 @@ Vagrant.configure("2") do |config|
           "-v /usr/bin/dumb-init:/usr/local/bin/dumb-init:ro",
           "--entrypoint=dumb-init"
         ].join(" "),
-        cmd: [
-          "/entrypoint.sh mesos-agent",
-          "--no-docker_kill_orphans"
-        ].join(" ")
+        cmd: "/entrypoint.sh mesos-agent"
     end
   end
 end
